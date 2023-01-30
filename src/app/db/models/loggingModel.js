@@ -6,7 +6,8 @@
  * @param {import('sequelize').DataTypes} DataTypes
  * @returns
  */
-module.exports = (sequelize, DataTypes) => {
+
+const loggingModel = (sequelize, DataTypes) => {
   const logging = sequelize.define('logging', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     action: DataTypes.STRING,
@@ -15,3 +16,5 @@ module.exports = (sequelize, DataTypes) => {
   })
   return logging
 }
+
+module.exports = loggingModel

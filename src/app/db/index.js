@@ -6,7 +6,7 @@ const models = require('./models')
 let sequelize
 
 sequelize = new Sequelize.Sequelize('sqlite::memory:', {
-  logging: false, //console.log
+  logging: process.env.NODE_ENV === 'development',
 })
 
 const db = {

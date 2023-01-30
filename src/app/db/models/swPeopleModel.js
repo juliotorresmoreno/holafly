@@ -6,7 +6,7 @@
  * @param {import('sequelize').DataTypes} DataTypes
  * @returns
  */
-module.exports = (sequelize, DataTypes) => {
+const swPeopleModel = (sequelize, DataTypes) => {
   const swPeople = sequelize.define(
     'swPeople',
     {
@@ -23,3 +23,5 @@ module.exports = (sequelize, DataTypes) => {
   )
   return swPeople
 }
+
+module.exports = swPeopleModel
