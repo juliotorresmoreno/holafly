@@ -23,7 +23,7 @@ const applySwapiEndpoints = (server, app) => {
     res.send(data)
   })
 
-  server.get('/hfswapi/getPeople/:id', async (req, res) => {
+  server.get('/hfswapi/getPeople/:id', async (req, res, next) => {
     try {
       const id = Number.parseInt(req.params.id)
       if (!id) throw createError[403]('id is not valid!')
@@ -47,9 +47,7 @@ const applySwapiEndpoints = (server, app) => {
         res.send(person)
         return
       }
-      /**
-       * @type {import('../../app/People/People').AbstractPeople}
-       */
+
       const data = new People(id)
       await data.init()
 
@@ -72,6 +70,7 @@ const applySwapiEndpoints = (server, app) => {
       if ('status' in error) {
         next(error)
       }
+      console.log(error)
       next(createError[500]('Internal server error'))
     }
   })
