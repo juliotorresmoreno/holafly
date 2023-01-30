@@ -1,5 +1,6 @@
 const WookieePeople = require('./wookieePeople')
-const CommonPeople = require('./CommonPeople')
+const CommonPeople = require('./commonPeople')
+const { People } = require('./People')
 
 const peopleFactory = async (id, lang) => {
   let people = null
@@ -12,4 +13,4 @@ const peopleFactory = async (id, lang) => {
   return people
 }
 
-module.exports = { peopleFactory }
+module.exports = { peopleFactory, CommonPeople, WookieePeople, People }
