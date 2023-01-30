@@ -1,6 +1,6 @@
 class AbstractPlanet {
   constructor(id) {
-    if (this.constructor == AbstractPeople) {
+    if (this.constructor == AbstractPlanet) {
       throw new Error("Abstract classes can't be instantiated.")
     }
   }
