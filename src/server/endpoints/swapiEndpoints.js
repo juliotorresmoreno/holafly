@@ -1,5 +1,5 @@
 const createError = require('http-errors')
-const { People } = require('../../app/People/people')
+const { People } = require('../../app/People/People')
 
 const _isWookieeFormat = (req) => {
   if (req.query.format && req.query.format == 'wookiee') {
@@ -48,7 +48,7 @@ const applySwapiEndpoints = (server, app) => {
         return
       }
       /**
-       * @type {import('../../app/People/people').AbstractPeople}
+       * @type {import('../../app/People/People').AbstractPeople}
        */
       const data = new People(id)
       await data.init()
