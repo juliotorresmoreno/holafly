@@ -1,5 +1,6 @@
 const { AbstractPlanet } = require('./abstractPlanet')
 const { swapiFunctions } = require('..')
+const db = require('../db')
 
 class Planet extends AbstractPlanet {
   constructor(id) {
@@ -12,6 +13,20 @@ class Planet extends AbstractPlanet {
   }
 
   async init() {
+    const planet = await db.swPlanet
+      .findByPk(this.id, {
+        attributes: ['id', 'name', 'gravity'],
+      })
+      .catch(() => {
+        throw new createHttpError[500]('Database is not working!')
+      })
+
+    if (planet) {
+      this.name = planet.name
+      this.gravity = planet.gravity
+      return
+    }
+
     /**
      * @type {import('./types').Person}
      */
@@ -23,6 +38,9 @@ class Planet extends AbstractPlanet {
     this.name = data.name
     const gravity = (/[0-9]+([0-9.][0-9]+)?/.exec(data.gravity) || [])[0] || '1'
     this.gravity = Number.parseFloat(gravity) || 0
+
+    // Save quiet
+    db.swPlanet.build(this).save()
   }
 
   getId() {

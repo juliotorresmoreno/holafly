@@ -1,5 +1,7 @@
 const { AbstractPeople } = require('./abstractPeople')
-const { swapiFunctions } = require('..')
+const { swapiFunctions, db } = require('..')
+const { getWeightOnPlanet } = require('../swapiFunctions')
+const { Planet } = require('../Planet')
 
 /**
  * @type {AbstractPeople}
@@ -14,10 +16,33 @@ class People extends AbstractPeople {
     this.mass = ''
     this.height = 0
     this.homeworld_name = ''
-    this.homeworl_id = 0
+    this.homeworld_id = 0
   }
 
   async init() {
+    const person = await db.swPeople
+      .findByPk(this.id, {
+        attributes: [
+          'id',
+          'name',
+          'mass',
+          'height',
+          'homeworld_name',
+          'homeworld_id',
+        ],
+      })
+      .catch(() => {
+        throw new createHttpError[500]('Database is not working!')
+      })
+    if (person) {
+      this.id = person.id
+      this.name = person.name
+      this.mass = person.mass
+      this.height = person.height
+      this.homeworld_name = person.homeworld_name
+      this.homeworld_id = person.homeworld_id
+      return
+    }
     /**
      * @type {import('./types').Person}
      */
@@ -37,8 +62,11 @@ class People extends AbstractPeople {
         throw new Error('swapi.dev is not working. Can you go online?')
       })
 
-    this.homeworl_id = Number.parseFloat(homeworldId)
+    this.homeworld_id = Number.parseFloat(homeworldId)
     this.homeworld_name = homeworl.name
+
+    // Save quiet
+    db.swPeople.build(this).save()
   }
   getId() {
     return this.id
@@ -56,7 +84,7 @@ class People extends AbstractPeople {
     return this.homeworld_name
   }
   getHomeworlId() {
-    return this.homeworl_id
+    return this.homeworld_id
   }
   getWeightOnPlanet(planetId) {
     throw new Error('To be implemented')

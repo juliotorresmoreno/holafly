@@ -29,50 +29,12 @@ const applySwapiEndpoints = (server, app) => {
       const id = Number.parseInt(req.params.id)
       if (!id) throw createError[403]('id is not valid!')
 
-      const person = await app.db.swPeople
-        .findByPk(id, {
-          attributes: [
-            'id',
-            'name',
-            'mass',
-            'height',
-            'homeworld_name',
-            'homeworld_id',
-          ],
-        })
-        .catch(() => {
-          throw new createError[500]('Database is not working!')
-        })
+      const person = new People(id)
+      await person.init()
 
-      if (person !== null) {
-        res.send(person)
-        return
-      }
-
-      const data = new People(id)
-      await data.init()
-
-      const payload = {
-        id: data.getId(),
-        name: data.getName(),
-        mass: data.getMass(),
-        height: data.getHeight(),
-        homeworld_name: data.getHomeworldName(),
-        homeworld_id: data.getHomeworlId(),
-      }
-
-      const row = await app.db.swPeople.build(payload)
-      row.save().catch(() => {
-        throw new createError[500]('Database is not working!')
-      })
-
-      res.send(payload)
+      res.json(person)
     } catch (error) {
-      if ('status' in error) {
-        next(error)
-      }
-      console.log(error)
-      next(createError[500]('Internal server error'))
+      next(error)
     }
   })
 
@@ -81,40 +43,12 @@ const applySwapiEndpoints = (server, app) => {
       const id = Number.parseInt(req.params.id)
       if (!id) throw createError[403]('id is not valid!')
 
-      const planet = await app.db.swPlanet
-        .findByPk(id, {
-          attributes: ['id', 'name', 'gravity'],
-        })
-        .catch(() => {
-          throw new createError[500]('Database is not working!')
-        })
+      const planet = new Planet(id)
+      await planet.init()
 
-      if (planet !== null) {
-        res.send(planet)
-        return
-      }
-
-      const data = new Planet(id)
-      await data.init()
-
-      const payload = {
-        id: data.getId(),
-        name: data.getName(),
-        gravity: data.getGravity(),
-      }
-
-      const row = await app.db.swPlanet.build(payload)
-      row.save().catch(() => {
-        throw new createError[500]('Database is not working!')
-      })
-
-      res.send(payload)
+      res.json(planet)
     } catch (error) {
-      if ('status' in error) {
-        next(error)
-      }
-      console.log(error)
-      next(createError[500]('Internal server error'))
+      next(error)
     }
   })
 
