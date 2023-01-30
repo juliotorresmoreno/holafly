@@ -9,9 +9,23 @@ sequelize = new Sequelize.Sequelize('sqlite::memory:', {
   logging: process.env.NODE_ENV === 'development',
 })
 
+/**
+ * @typedef {{
+ *  sequelize: Sequelize.Sequelize
+ *  Sequelize: Sequelize
+ *  swPeople: Sequelize.ModelCtor<Sequelize.Model<any, any>>,
+ *  swPlanet: Sequelize.ModelCtor<Sequelize.Model<any, any>>,
+ *  logging: Sequelize.ModelCtor<Sequelize.Model<any, any>>,
+ *  [x: string]: Sequelize.ModelCtor<Sequelize.Model<any, any>>
+ * }} DB
+ */
+
+/**
+ * @type {DB}
+ */
 const db = {
-  Sequelize,
   sequelize,
+  Sequelize,
 }
 
 for (const modelInit of models) {
