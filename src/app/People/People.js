@@ -86,8 +86,10 @@ class People extends AbstractPeople {
   getHomeworlId() {
     return this.homeworld_id
   }
-  getWeightOnPlanet(planetId) {
-    throw new Error('To be implemented')
+  async getWeightOnPlanet(planetId) {
+    const planet = new Planet(planetId)
+    await planet.init()
+    throw getWeightOnPlanet(this.mass, planet.gravity)
   }
 }
 
