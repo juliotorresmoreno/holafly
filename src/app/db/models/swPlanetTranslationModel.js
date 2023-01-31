@@ -6,19 +6,18 @@
  * @param {import('sequelize').DataTypes} DataTypes
  * @returns
  */
-const swPlanetModel = (sequelize, DataTypes) => {
-  const swPlanet = sequelize.define(
-    'swPlanet',
+const swPlanetTranslationModel = (sequelize, DataTypes) => {
+  const swPlanetTranslationModel = sequelize.define(
+    'swPlanetTranslation',
     {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       name: DataTypes.STRING,
-      gravity: DataTypes.FLOAT,
     },
     {
       paranoid: true,
     }
   )
-  return swPlanet
+  return swPlanetTranslationModel
 }
 
-module.exports = swPlanetModel
+module.exports = swPlanetTranslationModel
