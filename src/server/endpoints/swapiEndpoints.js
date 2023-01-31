@@ -30,7 +30,7 @@ const applySwapiEndpoints = (server, app) => {
       const id = Number.parseInt(req.params.id)
       if (!id) throw createHttpError[403]('id is not valid!')
 
-      const lang = _isWookieeFormat(req) ? 'wookiee' : ''
+      const lang = _isWookieeFormat(req) ? 'wookiee' : 'common'
       const data = await peopleFactory(id, lang)
       const homeworld = await planetFactory(data.getHomeworlId(), lang)
       const planet = homeworld
@@ -46,6 +46,7 @@ const applySwapiEndpoints = (server, app) => {
         mass: data.getMass(),
         height: data.getHeight(),
         homeworld: planet,
+        lang,
       }
 
       res.json(result)
@@ -59,13 +60,14 @@ const applySwapiEndpoints = (server, app) => {
       const id = Number.parseInt(req.params.id)
       if (!id) throw createHttpError[403]('id is not valid!')
 
-      const lang = _isWookieeFormat(req) ? 'wookiee' : ''
+      const lang = _isWookieeFormat(req) ? 'wookiee' : 'common'
       const data = await planetFactory(id, lang)
 
       const result = {
         id: data.getId(),
         name: data.getName(),
         gravity: data.getGravity(),
+        lang,
       }
 
       res.json(result)
@@ -79,7 +81,8 @@ const applySwapiEndpoints = (server, app) => {
       const planetId = crypto.randomInt(1, 60) // 60
       const personId = crypto.randomInt(1, 82) // 82
 
-      const person = await peopleFactory(personId)
+      const lang = _isWookieeFormat(req) ? 'wookiee' : 'common'
+      const person = await peopleFactory(personId, lang)
 
       const result = {
         id: person.id,
@@ -89,6 +92,7 @@ const applySwapiEndpoints = (server, app) => {
         homeworld_name: person.homeworld_name,
         homeworld_id: person.homeworld_id,
         weightOnPlanetRandom: await person.getWeightOnPlanet(planetId),
+        lang,
       }
 
       res.json(result)
