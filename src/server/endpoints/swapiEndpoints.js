@@ -31,7 +31,11 @@ const applySwapiEndpoints = (server, app) => {
       if (!id) throw createError[403]('id is not valid!')
 
       const data = new People(id)
-      await data.init()
+      if (_isWookieeFormat(req)) {
+        await data.init('wookiee')
+      } else {
+        await data.init()
+      }
 
       res.json(data)
     } catch (error) {
@@ -68,7 +72,6 @@ const applySwapiEndpoints = (server, app) => {
         height: person.height,
         homeworld_name: person.homeworld_name,
         homeworld_id: person.homeworld_id,
-        homeworld_planet_id: person.homeworld_planet_id,
         weightOnPlanetRandom: await person.getWeightOnPlanet(planetId),
       }
 

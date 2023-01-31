@@ -16,7 +16,6 @@ const swPeopleModel = (sequelize, DataTypes) => {
       height: DataTypes.INTEGER,
       homeworld_name: DataTypes.STRING,
       homeworld_id: DataTypes.INTEGER,
-      homeworld_planet_id: DataTypes.INTEGER,
     },
     {
       paranoid: true,

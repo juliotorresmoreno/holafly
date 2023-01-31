@@ -43,6 +43,7 @@ db.sequelize = sequelize
 db.Sequelize = Sequelize
 
 const initDB = async () => {
+  await db.swTranslation.sync({ force: true })
   await db.swPeople.sync({ force: true })
   await db.swPlanet.sync({ force: true })
   await db.logging.sync({ force: true })
@@ -69,6 +70,7 @@ const populateDB = async () => {
 const deleteDB = async () => {
   await db.swPeople.drop()
   await db.swPlanet.drop()
+  await db.swTranslation.drop()
   await db.logging.drop()
 }
 
@@ -81,11 +83,17 @@ const watchDB = async () => {
     raw: true,
   })
 
+  const translation = await db.swTranslation.findAll({
+    raw: true,
+  })
+
   console.log('============= swPlanet =============')
   console.table(planets)
   console.log('\n')
   console.log('============= swPeople =============')
   console.table(people)
+  console.log('============= swTranslation =============')
+  console.table(translation)
 }
 
 db.initDB = initDB

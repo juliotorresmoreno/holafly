@@ -2,6 +2,7 @@ const { AbstractPeople } = require('./abstractPeople')
 const { swapiFunctions, db } = require('..')
 const { getWeightOnPlanet } = require('../swapiFunctions')
 const { Planet } = require('../Planet')
+const l18n = require('./attrb').translate
 
 /**
  * @type {AbstractPeople}
@@ -17,10 +18,9 @@ class People extends AbstractPeople {
     this.height = 0
     this.homeworld_name = ''
     this.homeworld_id = 0
-    this.homeworld_planet_id = 0
   }
 
-  async init() {
+  async init(lang = '') {
     const person = await db.swPeople
       .findByPk(this.id, {
         attributes: [
@@ -30,45 +30,38 @@ class People extends AbstractPeople {
           'height',
           'homeworld_name',
           'homeworld_id',
-          'homeworld_planet_id',
         ],
       })
       .catch(() => {
         throw new createHttpError[500]('Database is not working!')
       })
     if (person) {
-      this.id = person.id
       this.name = person.name
       this.mass = person.mass
       this.height = person.height
       this.homeworld_name = person.homeworld_name
       this.homeworld_id = person.homeworld_id
-      this.homeworld_planet_id = person.homeworld_planet_id
       return
     }
+    const url = 'https://swapi.dev/api/people/' + this.id + '?format=' + lang
     /**
      * @type {import('./types').Person}
      */
     const data = await swapiFunctions
-      .genericRequest('https://swapi.dev/api/people/' + this.id, 'GET', null)
+      .genericRequest(url, 'GET', null)
       .catch(() => {
         throw createError[500]('swapi.dev is not working. Can you go online?')
       })
-    this.name = data.name
-    this.mass = Number.parseFloat(data.mass)
-    this.height = Number.parseFloat(data.height)
-    const homeworldId = (/[0-9]+/.exec(data.homeworld) || [])[0]
-    const planetId = (/[0-9]+/.exec(data.url) || [])[0]
+    this.name = data[l18n('name', lang)]
+    this.mass = Number.parseFloat(data[l18n('mass', lang)])
+    this.height = Number.parseFloat(data[l18n('height', lang)])
+    const homeworldId = (/[0-9]+/.exec(data[l18n('homeworld', lang)]) || [])[0]
 
-    const homeworl = await swapiFunctions
-      .genericRequest(data.homeworld, 'GET', null)
-      .catch(() => {
-        throw new Error('swapi.dev is not working. Can you go online?')
-      })
+    const homeworl = new Planet(parseInt(homeworldId))
+    await homeworl.init(lang)
 
-    this.homeworld_id = Number.parseFloat(homeworldId)
-    this.homeworld_name = homeworl.name
-    this.homeworld_planet_id = Number.parseFloat(planetId)
+    this.homeworld_id = homeworl.getId()
+    this.homeworld_name = homeworl.getName()
 
     // Save quiet
     db.swPeople.build(this).save()
@@ -91,9 +84,7 @@ class People extends AbstractPeople {
   getHomeworlId() {
     return this.homeworld_id
   }
-  getPlanetId() {
-    return this.homeworld_planet_id
-  }
+
   async getWeightOnPlanet(planetId) {
     const planet = new Planet(planetId)
     await planet.init()
@@ -102,7 +93,7 @@ class People extends AbstractPeople {
       name: planet.getName(),
       weight: getWeightOnPlanet(this.mass, planet.gravity),
       gravity: planet.getGravity(),
-      homeworld_planet: this.homeworld_planet_id === planetId,
+      homeworld_planet: this.homeworld_id === planetId,
     }
   }
 }

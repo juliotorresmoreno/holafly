@@ -1,6 +1,7 @@
 const { AbstractPlanet } = require('./abstractPlanet')
 const { swapiFunctions } = require('..')
 const db = require('../db')
+const l18n = require('./attrb').translate
 
 class Planet extends AbstractPlanet {
   constructor(id) {
@@ -12,7 +13,7 @@ class Planet extends AbstractPlanet {
     this.gravity = 0
   }
 
-  async init() {
+  async init(lang) {
     const planet = await db.swPlanet
       .findByPk(this.id, {
         attributes: ['id', 'name', 'gravity'],
@@ -27,15 +28,17 @@ class Planet extends AbstractPlanet {
       return
     }
 
+    const url = 'https://swapi.dev/api/planets/' + this.id + '?format=' + lang
+
     /**
      * @type {import('./types').Person}
      */
     const data = await swapiFunctions
-      .genericRequest('https://swapi.dev/api/planets/' + this.id, 'GET', null)
+      .genericRequest(url, 'GET', null)
       .catch(() => {
         throw new Error('swapi.dev is not working. Can you go online?')
       })
-    this.name = data.name
+    this.name = data[l18n('name', lang)]
     const gravity = (/[0-9]+([0-9.][0-9]+)?/.exec(data.gravity) || [])[0] || '1'
     this.gravity = Number.parseFloat(gravity) || 0
 
