@@ -32,6 +32,7 @@ const applySwapiEndpoints = (server, app) => {
 
       const lang = _isWookieeFormat(req) ? 'wookiee' : 'common'
       const data = await peopleFactory(id, lang)
+
       const homeworld = await planetFactory(data.getHomeworlId(), lang)
       const planet = homeworld
         ? {

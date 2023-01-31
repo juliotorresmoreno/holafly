@@ -16,3 +16,11 @@ export type Person = {
   edited: string
   url: string
 }
+
+export type WeightOnPlanet = {
+  planet_id: number
+  name: number
+  weight: number
+  gravity: number
+  homeworld_planet: boolean
+}
