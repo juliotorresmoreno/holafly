@@ -22,11 +22,28 @@ export interface Person {
   lang: string
 }
 
+export interface Header {
+  'user-agent': string
+  'accept-encoding': string
+  host: string
+  connection: string
+  [x: string]: string
+}
+
 export interface Log {
   id: number
   action: string
-  header: string
+  header: Header
   ip: string
   createdAt: Date
   updatedAt: Date
+}
+
+export interface TestApi {
+  people: string
+  planets: string
+  films: string
+  species: string
+  vehicles: string
+  starships: string
 }

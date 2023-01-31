@@ -8,6 +8,7 @@ const createHttpError = require('http-errors')
  * @typedef {import('./types').Person} Person
  * @typedef {import('./types').Planet} Planet
  * @typedef {import('./types').WeightOnPlanetRandom} WeightOnPlanetRandom
+ * @typedef {import('./types').TestApi} TestApi
  * @typedef {import('./types').Log} Log
  */
 
@@ -32,7 +33,7 @@ const applySwapiEndpoints = (server, app) => {
     /**
      *
      * @param {import('express').Request} req
-     * @param {import('express').Response<Person>} res
+     * @param {import('express').Response<TestApi>} res
      * @param {import('express').NextFunction} next
      */
     async (req, res) => {
@@ -173,7 +174,16 @@ const applySwapiEndpoints = (server, app) => {
     async (req, res, next) => {
       try {
         const data = await app.db.logging.findAll()
-        res.send(data)
+        res.send(
+          data.map((log) => ({
+            id: log.id,
+            action: log.action,
+            ip: log.ip,
+            createdAt: log.createdAt,
+            updatedAt: log.updatedAt,
+            header: JSON.parse(log.header),
+          }))
+        )
       } catch (error) {
         next(error)
       }
