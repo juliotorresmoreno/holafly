@@ -1,7 +1,7 @@
-const createError = require('http-errors')
-const { People } = require('../../app/People')
-const { Planet } = require('../../app/Planet')
+const { People, peopleFactory } = require('../../app/People')
+const { Planet, planetFactory } = require('../../app/Planet')
 const crypto = require('crypto')
+const createHttpError = require('http-errors')
 
 const _isWookieeFormat = (req) => {
   if (req.query.format && req.query.format == 'wookiee') {
@@ -28,16 +28,27 @@ const applySwapiEndpoints = (server, app) => {
   server.get('/hfswapi/getPeople/:id', async (req, res, next) => {
     try {
       const id = Number.parseInt(req.params.id)
-      if (!id) throw createError[403]('id is not valid!')
+      if (!id) throw createHttpError[403]('id is not valid!')
 
-      const data = new People(id)
-      if (_isWookieeFormat(req)) {
-        await data.init('wookiee')
-      } else {
-        await data.init()
+      const lang = _isWookieeFormat(req) ? 'wookiee' : ''
+      const data = await peopleFactory(id, lang)
+      const homeworld = await planetFactory(data.getHomeworlId(), lang)
+      const planet = homeworld
+        ? {
+            id: homeworld.getId(),
+            name: homeworld.getName(),
+            gravity: homeworld.getGravity(),
+          }
+        : null
+      const result = {
+        id: data.getId(),
+        name: data.getName(),
+        mass: data.getMass(),
+        height: data.getHeight(),
+        homeworld: planet,
       }
 
-      res.json(data)
+      res.json(result)
     } catch (error) {
       next(error)
     }
@@ -46,12 +57,18 @@ const applySwapiEndpoints = (server, app) => {
   server.get('/hfswapi/getPlanet/:id', async (req, res, next) => {
     try {
       const id = Number.parseInt(req.params.id)
-      if (!id) throw createError[403]('id is not valid!')
+      if (!id) throw createHttpError[403]('id is not valid!')
 
-      const data = new Planet(id)
-      await data.init()
+      const lang = _isWookieeFormat(req) ? 'wookiee' : ''
+      const data = await planetFactory(id, lang)
 
-      res.json(data)
+      const result = {
+        id: data.getId(),
+        name: data.getName(),
+        gravity: data.getGravity(),
+      }
+
+      res.json(result)
     } catch (error) {
       next(error)
     }

@@ -43,14 +43,6 @@ class AbstractPeople {
 
   /**
    *
-   * @returns {string}
-   */
-  getHomeworldName() {
-    return this.homeworldName
-  }
-
-  /**
-   *
    * @returns {number}
    */
   getHomeworlId() {

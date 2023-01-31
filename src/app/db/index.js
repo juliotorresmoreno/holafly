@@ -15,6 +15,8 @@ sequelize = new Sequelize.Sequelize('sqlite::memory:', {
  *  Sequelize: Sequelize
  *  swPeople: Sequelize.ModelCtor<Sequelize.Model<any, any>>,
  *  swPlanet: Sequelize.ModelCtor<Sequelize.Model<any, any>>,
+ *  swPeopleTranslation: Sequelize.ModelCtor<Sequelize.Model<any, any>>,
+ *  swPlanetTranslation: Sequelize.ModelCtor<Sequelize.Model<any, any>>,
  *  logging: Sequelize.ModelCtor<Sequelize.Model<any, any>>,
  *  [x: string]: Sequelize.ModelCtor<Sequelize.Model<any, any>>
  * }} DB
@@ -43,7 +45,8 @@ db.sequelize = sequelize
 db.Sequelize = Sequelize
 
 const initDB = async () => {
-  await db.swTranslation.sync({ force: true })
+  await db.swPeopleTranslation.sync({ force: true })
+  await db.swPlanetTranslation.sync({ force: true })
   await db.swPeople.sync({ force: true })
   await db.swPlanet.sync({ force: true })
   await db.logging.sync({ force: true })
@@ -70,7 +73,8 @@ const populateDB = async () => {
 const deleteDB = async () => {
   await db.swPeople.drop()
   await db.swPlanet.drop()
-  await db.swTranslation.drop()
+  await db.swPeopleTranslation.drop()
+  await db.swPlanetTranslation.drop()
   await db.logging.drop()
 }
 
@@ -83,7 +87,11 @@ const watchDB = async () => {
     raw: true,
   })
 
-  const translation = await db.swTranslation.findAll({
+  const peopleTranslation = await db.swPeopleTranslation.findAll({
+    raw: true,
+  })
+
+  const planetTranslation = await db.swPlanetTranslation.findAll({
     raw: true,
   })
 
@@ -92,8 +100,10 @@ const watchDB = async () => {
   console.log('\n')
   console.log('============= swPeople =============')
   console.table(people)
-  console.log('============= swTranslation =============')
-  console.table(translation)
+  console.log('============= swPeopleTranslation =============')
+  console.table(peopleTranslation)
+  console.log('============= swPlanetTranslation =============')
+  console.table(planetTranslation)
 }
 
 db.initDB = initDB

@@ -1,6 +1,13 @@
 const swPeople = require('./swPeopleModel')
 const swPlanet = require('./swPlanetModel')
 const logging = require('./loggingModel')
-const swTranslation = require('./swTranslationModel')
+const swPeopleTranslation = require('./swPeopleTranslationModel')
+const swPlanetTranslation = require('./swPlanetTranslationModel')
 
-module.exports = [swPeople, swPlanet, swTranslation, logging]
+module.exports = [
+  swPeople,
+  swPlanet,
+  swPlanetTranslation,
+  swPeopleTranslation,
+  logging,
+]
