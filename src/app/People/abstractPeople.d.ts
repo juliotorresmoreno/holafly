@@ -1,7 +1,7 @@
 import { WeightOnPlanet } from './types'
 
 export class AbstractPeople {
-  constructor(id)
+  constructor(id: number)
 
   init(): Promise<void>
 

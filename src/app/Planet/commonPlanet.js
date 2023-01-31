@@ -1,7 +1,6 @@
 const Planet = require('./Planet').Planet
 const { swapiFunctions } = require('..')
 const db = require('../db')
-const l18n = require('./attrb').translate
 
 class CommonPlanet extends Planet {
   constructor(id) {
