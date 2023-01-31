@@ -7,11 +7,11 @@ _Todas las instrucciones parten de la premisa de que el aspirante tiene una vers
 - Clonar este repositorio y realizar sobre el clon todos los cambios pedidos en el enunciado.
 - Instalar las librerias externas mediante `npm install` y ejecutar el servidor mediante `npm run dev`
 - Realizar los commits respetando la siguiente estructura:
-  - `Acción (contexto): mensaje`, siendo:
-    - Accion: `feat` para nuevas funcionalidades, `fix` para la corrección de errores, `refactor` para las tareas de refactorización de código o `chore` para cambios no relacionados con el código.
-    - Contexto: una cadena descriptiva sobre la tarea que se está realiazndo
-    - mensaje: un mensaje conciso sobre el cambio a realizar
-  - Ejemplo: `feat (getPeople): Creada funcion de consulta a la BD`
+- `Acción (contexto): mensaje`, siendo:
+- Accion: `feat` para nuevas funcionalidades, `fix` para la corrección de errores, `refactor` para las tareas de refactorización de código o `chore` para cambios no relacionados con el código.
+- Contexto: una cadena descriptiva sobre la tarea que se está realiazndo
+- mensaje: un mensaje conciso sobre el cambio a realizar
+- Ejemplo: `feat (getPeople): Creada funcion de consulta a la BD`
 - Una vez se considere que la prueba está concluida, notificarnos la dirección del repositorio clonado para proceder a su revisión
 
 ### Notas
@@ -55,8 +55,7 @@ El presente código despliega un servidor node.js/express sobre el que se busca 
 >
 > En caso de que los datos requeridos no se encuentren disponibles en la BD, se habrá de consultar en la SWAPI (https://swapi.dev/) sobre el endpoint adecuado.
 >
-> > _Funcionalidad extra:_
-> > _Se debe detectar si se está tratando de calcular el peso de un personaje en su planeta natal y arrojar un error._
+> > _Funcionalidad extra:_ > > _Se debe detectar si se está tratando de calcular el peso de un personaje en su planeta natal y arrojar un error._
 
 #### /hfswapi/getLogs
 
@@ -67,3 +66,11 @@ El presente código despliega un servidor node.js/express sobre el que se busca 
 > - ip: Dirección IP desde donde se realiza la llamada
 
 Adicionalmente a estos endpoints, se requiere ampliar el paquete `People` con las clases y funciones que sean necesarias para cubrir el caso de que el formato del objeto retornado por la SWAPI sea en idioma Wookiee.
+
+### Consideraciones
+
+**http-errors**: He añadido esta librería debido a que siempre hay que gestionar los errores y considero que eso debería centralizarse en algún lado por si se desea posteriormente usar algo como aws cloudwatch para almacenarlos.
+**typescript**: Se nota por la forma en que estructuraron el código que en su empresa realizan una buena programación del código. La forma como estructuraron el código es prueba de ello. Es por esto que les recomiendo echar una mirada a este lenguaje.
+Por cierto las anotaciones de typescript que agregue no son obligatorias y se pueden eliminar en favor de jsDoc.
+**nest.js**: Este framework guarda todas las buenas practicas que ustedes desean tener en un proyecto, tiene ademas un soporte de pago por lo que podría ser una buena opción. Es por esto que les recomiendo echar una mirada a este framework.
+**redis**: sqlite no es malo pero como memoria cache les recomiendo mas esta. Es muy escalable y si lo deseas los datos de la base de datos se guardan en disco.
