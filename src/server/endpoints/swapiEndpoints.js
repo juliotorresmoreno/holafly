@@ -1,6 +1,7 @@
 const createError = require('http-errors')
 const { People } = require('../../app/People')
 const { Planet } = require('../../app/Planet')
+const crypto = require('crypto')
 
 const _isWookieeFormat = (req) => {
   if (req.query.format && req.query.format == 'wookiee') {
@@ -29,10 +30,10 @@ const applySwapiEndpoints = (server, app) => {
       const id = Number.parseInt(req.params.id)
       if (!id) throw createError[403]('id is not valid!')
 
-      const person = new People(id)
-      await person.init()
+      const data = new People(id)
+      await data.init()
 
-      res.json(person)
+      res.json(data)
     } catch (error) {
       next(error)
     }
@@ -43,17 +44,38 @@ const applySwapiEndpoints = (server, app) => {
       const id = Number.parseInt(req.params.id)
       if (!id) throw createError[403]('id is not valid!')
 
-      const planet = new Planet(id)
-      await planet.init()
+      const data = new Planet(id)
+      await data.init()
 
-      res.json(planet)
+      res.json(data)
     } catch (error) {
       next(error)
     }
   })
 
-  server.get('/hfswapi/getWeightOnPlanetRandom', async (req, res) => {
-    res.sendStatus(501)
+  server.get('/hfswapi/getWeightOnPlanetRandom', async (req, res, next) => {
+    try {
+      const planetId = crypto.randomInt(1, 60) // 60
+      const personId = crypto.randomInt(1, 82) // 82
+
+      const person = new People(personId)
+      await person.init()
+
+      const result = {
+        id: person.id,
+        name: person.name,
+        mass: person.mass,
+        height: person.height,
+        homeworld_name: person.homeworld_name,
+        homeworld_id: person.homeworld_id,
+        homeworld_planet_id: person.homeworld_planet_id,
+        weightOnPlanetRandom: await person.getWeightOnPlanet(planetId),
+      }
+
+      res.json(result)
+    } catch (error) {
+      next(error)
+    }
   })
 
   server.get('/hfswapi/getLogs', async (req, res) => {

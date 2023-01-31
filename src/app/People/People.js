@@ -17,6 +17,7 @@ class People extends AbstractPeople {
     this.height = 0
     this.homeworld_name = ''
     this.homeworld_id = 0
+    this.homeworld_planet_id = 0
   }
 
   async init() {
@@ -29,6 +30,7 @@ class People extends AbstractPeople {
           'height',
           'homeworld_name',
           'homeworld_id',
+          'homeworld_planet_id',
         ],
       })
       .catch(() => {
@@ -41,6 +43,7 @@ class People extends AbstractPeople {
       this.height = person.height
       this.homeworld_name = person.homeworld_name
       this.homeworld_id = person.homeworld_id
+      this.homeworld_planet_id = person.homeworld_planet_id
       return
     }
     /**
@@ -55,6 +58,7 @@ class People extends AbstractPeople {
     this.mass = Number.parseFloat(data.mass)
     this.height = Number.parseFloat(data.height)
     const homeworldId = (/[0-9]+/.exec(data.homeworld) || [])[0]
+    const planetId = (/[0-9]+/.exec(data.url) || [])[0]
 
     const homeworl = await swapiFunctions
       .genericRequest(data.homeworld, 'GET', null)
@@ -64,6 +68,7 @@ class People extends AbstractPeople {
 
     this.homeworld_id = Number.parseFloat(homeworldId)
     this.homeworld_name = homeworl.name
+    this.homeworld_planet_id = Number.parseFloat(planetId)
 
     // Save quiet
     db.swPeople.build(this).save()
@@ -86,10 +91,19 @@ class People extends AbstractPeople {
   getHomeworlId() {
     return this.homeworld_id
   }
+  getPlanetId() {
+    return this.homeworld_planet_id
+  }
   async getWeightOnPlanet(planetId) {
     const planet = new Planet(planetId)
     await planet.init()
-    throw getWeightOnPlanet(this.mass, planet.gravity)
+    return {
+      planet_id: planetId,
+      name: planet.getName(),
+      weight: getWeightOnPlanet(this.mass, planet.gravity),
+      gravity: planet.getGravity(),
+      homeworld_planet: this.homeworld_planet_id === planetId,
+    }
   }
 }
 
