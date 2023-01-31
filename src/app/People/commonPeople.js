@@ -1,8 +1,9 @@
 const { AbstractPeople } = require('./abstractPeople')
 const { swapiFunctions, db } = require('..')
-const { Planet } = require('../Planet')
+const { planetFactory } = require('../Planet')
 const { People } = require('./People')
 const createHttpError = require('http-errors')
+const { getWeightOnPlanet } = require('../swapiFunctions')
 
 /**
  * @type {AbstractPeople}
@@ -76,6 +77,20 @@ class CommonPeople extends People {
     }
     if (local && !this.name) {
       return this.getRemoteData(true)
+    }
+  }
+
+  async getWeightOnPlanet(planetId) {
+    if (!this.getMass()) return null
+    const planet = await planetFactory(planetId, '')
+    return {
+      planet_id: planetId,
+      name: planet.getName(),
+      weight: planet.getGravity()
+        ? getWeightOnPlanet(this.mass, planet.gravity)
+        : 'unknown',
+      gravity: planet.getGravity(),
+      homeworld_planet: this.homeworld_id === planetId,
     }
   }
 }

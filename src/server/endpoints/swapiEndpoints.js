@@ -1,5 +1,5 @@
-const { People, peopleFactory } = require('../../app/People')
-const { Planet, planetFactory } = require('../../app/Planet')
+const { peopleFactory } = require('../../app/People')
+const { planetFactory } = require('../../app/Planet')
 const crypto = require('crypto')
 const createHttpError = require('http-errors')
 
@@ -79,8 +79,7 @@ const applySwapiEndpoints = (server, app) => {
       const planetId = crypto.randomInt(1, 60) // 60
       const personId = crypto.randomInt(1, 82) // 82
 
-      const person = new People(personId)
-      await person.init()
+      const person = await peopleFactory(personId)
 
       const result = {
         id: person.id,

@@ -1,7 +1,7 @@
 const { AbstractPeople } = require('./abstractPeople')
 const { swapiFunctions, db } = require('..')
 const { getWeightOnPlanet } = require('../swapiFunctions')
-const { Planet } = require('../Planet')
+const { planetFactory } = require('../Planet')
 const { People } = require('./People')
 const createHttpError = require('http-errors')
 const l18n = require('./attrb').translate
@@ -109,12 +109,14 @@ class WookieePeople extends People {
   }
 
   async getWeightOnPlanet(planetId) {
-    const planet = new Planet(planetId)
-    await planet.init()
+    if (!this.getMass()) return null
+    const planet = await planetFactory(planetId, 'wookiee')
     return {
       planet_id: planetId,
       name: planet.getName(),
-      weight: getWeightOnPlanet(this.mass, planet.gravity),
+      weight: planet.getGravity()
+        ? getWeightOnPlanet(this.mass, planet.gravity)
+        : 'unknown',
       gravity: planet.getGravity(),
       homeworld_planet: this.homeworld_id === planetId,
     }
