@@ -1,6 +1,7 @@
 const { AbstractPeople } = require('./abstractPeople')
 const { getWeightOnPlanet } = require('../swapiFunctions')
 const { Planet } = require('../Planet')
+const createHttpError = require('http-errors')
 
 /**
  * @type {AbstractPeople}
@@ -18,7 +19,7 @@ class People extends AbstractPeople {
   }
 
   async init() {
-    throw new Error('To be implemented')
+    throw new createHttpError[500]('To be implemented')
   }
   getId() {
     return this.id
@@ -37,7 +38,7 @@ class People extends AbstractPeople {
   }
 
   async getWeightOnPlanet(planetId) {
-    throw new Error('To be implemented')
+    throw new createHttpError[500]('To be implemented')
   }
 }
 

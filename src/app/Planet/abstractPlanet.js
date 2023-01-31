@@ -1,3 +1,5 @@
+const createHttpError = require('http-errors')
+
 class AbstractPlanet {
   constructor(id) {
     if (this.constructor == AbstractPlanet) {
@@ -6,7 +8,7 @@ class AbstractPlanet {
   }
 
   async init() {
-    throw new Error('To be implemented')
+    throw new createHttpError[500]('To be implemented')
   }
 
   getName() {

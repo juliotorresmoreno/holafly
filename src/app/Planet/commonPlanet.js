@@ -5,11 +5,6 @@ const db = require('../db')
 class CommonPlanet extends Planet {
   constructor(id) {
     super(id)
-    if (!id) throw new Error('id is undefined!')
-
-    this.id = id
-    this.name = ''
-    this.gravity = 0
   }
 
   async getRemoteData(short = false) {
@@ -27,9 +22,8 @@ class CommonPlanet extends Planet {
     const pre = /[0-9]+([0-9.][0-9]+)?/
     const gravity = pre.exec(data.gravity)
     if (gravity && gravity.length > 0) {
-      this.gravity = Number.parseFloat(gravity[0])
+      this.gravity = Number.parseFloat(gravity[0]) || 1
     }
-    this.gravity = Number.parseFloat(gravity) || 0
 
     if (!short) {
       await db.swPlanet
